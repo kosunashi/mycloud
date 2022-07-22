@@ -13,20 +13,22 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 @Slf4j
 public class OrderController {
-
-    private static final String PAYMENT_URL = "http://localhost:8001";
+    //不可以写死 否则一直访问的都是这个地址
+//    private static final String PAYMENT_URL = "http://localhost:8001";
+    // 通过在eureka上注册过的微服务名称调用
+    public static final String PAYMENT_SRV = "http://CLOUD-PAYMENT-SERVICE";
 
     @Autowired
     private RestTemplate restTemplate;
 
     @GetMapping("/consumer/payment/create")
     public CommonResult<Payment> create(@RequestBody Payment payment){
-        return restTemplate.postForObject(PAYMENT_URL + "/payment/create", payment, CommonResult.class);
+        return restTemplate.postForObject(PAYMENT_SRV + "/payment/create", payment, CommonResult.class);
     }
 
     @GetMapping("/consumer/payment/get/{id}")
     public CommonResult<Payment> getPayment(@PathVariable("id") Long id){
-        return restTemplate.getForObject(PAYMENT_URL+ "/payment/get/" + id, CommonResult.class);
+        return restTemplate.getForObject(PAYMENT_SRV+ "/payment/get/" + id, CommonResult.class);
     }
 
 }
